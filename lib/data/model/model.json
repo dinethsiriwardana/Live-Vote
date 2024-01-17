@@ -1,0 +1,146 @@
+{
+    "event": [
+        {
+            "id": "id1",
+            "name": "name1",
+            "description": "description1",
+            "host": "host1",
+            "questions": [
+                {
+                    "id": 1,
+                    "question": "question",
+                    "answers": [
+                        {
+                            "id": 1,
+                            "answer": "answer1",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer2",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer3",
+                            "noOfVotes": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "question": "question2",
+                    "answers": [
+                        {
+                            "id": 1,
+                            "answer": "answer1",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer2",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer3",
+                            "noOfVotes": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "question": "question3",
+                    "answers": [
+                        {
+                            "id": 1,
+                            "answer": "answer1",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer2",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer3",
+                            "noOfVotes": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "id2",
+            "name": "name2",
+            "description": "description2",
+            "host": "host2",
+            "questions": [
+                {
+                    "id": 1,
+                    "question": "question",
+                    "answers": [
+                        {
+                            "id": 1,
+                            "answer": "answer1",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer2",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer3",
+                            "noOfVotes": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "question": "question2",
+                    "answers": [
+                        {
+                            "id": 1,
+                            "answer": "answer1",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer2",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer3",
+                            "noOfVotes": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "question": "question3",
+                    "answers": [
+                        {
+                            "id": 1,
+                            "answer": "answer1",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer2",
+                            "noOfVotes": 0
+                        },
+                        {
+                            "id": 1,
+                            "answer": "answer3",
+                            "noOfVotes": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
