@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:live_vote/firebase_options.dart';
-import 'package:live_vote/presentation/screens/home/home.dart';
+import 'package:live_vote/presentation/screens/user/home/home.dart';
 import 'package:live_vote/route.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

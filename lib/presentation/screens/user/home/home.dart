@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_vote/data/firebase/realtime_database.dart';
 import 'package:live_vote/data/model/single_event_model.dart';
-import 'package:live_vote/presentation/screens/quiz/quiz.dart';
+import 'package:live_vote/presentation/screens/user/quiz/quiz.dart';
 import 'package:live_vote/presentation/widget/background.dart';
 import 'package:live_vote/presentation/widget/cutom_button.dart';
 import 'package:live_vote/presentation/widget/glass_container.dart';

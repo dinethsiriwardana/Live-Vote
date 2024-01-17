@@ -27,8 +27,16 @@ int _currentNumber = 0;
 class _QuizPageState extends State<QuizPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Event get event => widget.event;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _numberStreamController.add(1);
+
     return Scaffold(
       body: Container(
         height: 100.h,
@@ -58,6 +66,7 @@ class _QuizPageState extends State<QuizPage> {
 
                           if (snapshot.hasData) {
                             final data = snapshot.data as DocumentSnapshot;
+
                             final questions = data['liveq'];
                             if (data['liveq'] == 0) {
                               return Column(
@@ -106,44 +115,79 @@ class _QuizPageState extends State<QuizPage> {
                                   StreamBuilder<int>(
                                     stream: _numberStreamController.stream,
                                     builder: (context, snapshot) {
-                                      return SizedBox(
-                                        height: 38.h,
-                                        child: ListView.builder(
-                                          itemCount: event
-                                              .questions![data['liveq']]
-                                              .answers!
-                                              .length,
-                                          itemBuilder: (context, index) {
-                                            int ans = index + 1;
+                                      _currentNumber = snapshot.data ?? 0;
 
-                                            return SizedBox(
-                                              height: 8.h,
-                                              child: ListTile(
-                                                title: InkWell(
-                                                  onTap: () async {
-                                                    try {
-                                                      _numberStreamController
-                                                          .add(index);
-                                                    } catch (e) {}
-                                                  },
-                                                  child: RepText(
-                                                    text:
-                                                        'Answer $ans ${event.questions![data['liveq']].answers![index].answer}',
-                                                    size: 40,
-                                                    isCenter: false,
+                                      if (snapshot.data == 5) {
+                                        return Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 15.h,
+                                            ),
+                                            RepText(
+                                              text:
+                                                  'Thank You\n wait for next question',
+                                              size: 40,
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 38.h,
+                                            child: ListView.builder(
+                                              itemCount: event
+                                                  .questions![data['liveq']]
+                                                  .answers!
+                                                  .length,
+                                              itemBuilder: (context, index) {
+                                                int ans = index + 1;
+
+                                                return SizedBox(
+                                                  height: 8.h,
+                                                  child: ListTile(
+                                                    title: InkWell(
+                                                      onTap: () async {
+                                                        try {
+                                                          _numberStreamController
+                                                              .add(index);
+                                                        } catch (e) {}
+                                                      },
+                                                      child: RepText(
+                                                        text:
+                                                            'Answer $ans ${event.questions![data['liveq']].answers![index].answer}',
+                                                        size: 40,
+                                                        isCenter: false,
+                                                        color: snapshot.data ==
+                                                                index
+                                                            ? Colors.green
+                                                            : Colors.white,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          CustomButton(
+                                            onPressed: () async {
+                                              print(_currentNumber + 1);
+                                              await FirestoreDatabase()
+                                                  .updateEvent(
+                                                      event.id,
+                                                      event
+                                                          .questions![
+                                                              data['liveq']]
+                                                          .id,
+                                                      _currentNumber + 1);
+                                              _numberStreamController.add(5);
+                                            },
+                                            text: 'Go',
+                                          )
+                                        ],
                                       );
                                     },
                                   ),
-                                  CustomButton(
-                                    onPressed: () {},
-                                    text: 'Go',
-                                  )
                                 ],
                               );
                             }
