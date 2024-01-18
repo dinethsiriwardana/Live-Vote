@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_vote/data/firebase/realtime_database.dart';
 import 'package:live_vote/data/model/single_event_model.dart';
+import 'package:live_vote/presentation/screens/admin/quiz/admin_quiz.dart';
 import 'package:live_vote/presentation/screens/user/quiz/quiz.dart';
 import 'package:live_vote/presentation/widget/background.dart';
 import 'package:live_vote/presentation/widget/cutom_button.dart';
@@ -26,7 +27,7 @@ Future<void> _checkCode(BuildContext context) async {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuizPage(event: event),
+        builder: (context) => AdminQuizPage(event: event),
       ),
     );
   } catch (e) {

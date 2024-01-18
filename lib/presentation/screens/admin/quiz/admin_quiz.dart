@@ -4,8 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:live_vote/Data/firebase/realtime_database.dart';
 import 'package:live_vote/const.dart';
+import 'package:live_vote/data/model/answer_model.dart';
+import 'package:live_vote/data/model/question_model.dart';
 import 'package:live_vote/data/model/single_event_model.dart';
 import 'package:live_vote/presentation/widget/background.dart';
+import 'package:live_vote/presentation/widget/bar_chart_sample.dart';
 import 'package:live_vote/presentation/widget/cutom_button.dart';
 import 'package:live_vote/presentation/widget/glass_container.dart';
 import 'package:live_vote/presentation/widget/responsize_text.dart';
@@ -23,6 +26,8 @@ final StreamController<int> _numberStreamController =
     StreamController<int>.broadcast();
 
 int _currentNumber = 0;
+int _currentQ = 0;
+int questions = 0;
 
 class _AdminQuizPageState extends State<AdminQuizPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -68,19 +73,29 @@ class _AdminQuizPageState extends State<AdminQuizPage> {
                             final data = snapshot.data as DocumentSnapshot;
 
                             final questions = data['liveq'];
-                            if (data['liveq'] == 0) {
+                            if (data['liveq'] == -1) {
                               return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
                                   CircularProgressIndicator(
                                     color: CustomeColor().primaryColor,
                                   ),
-                                  SizedBox(
-                                    height: 20,
+                                  const SizedBox(
+                                    height: 80,
                                   ),
-                                  RepText(
-                                    text: "Wait...",
-                                    size: 20,
-                                  ),
+                                  CustomButton(
+                                      size: 30.w,
+                                      onPressed: () async {
+                                        {
+                                          await FirestoreDatabase()
+                                              .updateLiveQuiz(event.id, 1);
+                                        }
+                                      },
+                                      text: "Start")
                                 ],
                               );
                               // Loading indicator while data is fetching.
@@ -132,57 +147,114 @@ class _AdminQuizPageState extends State<AdminQuizPage> {
                                         );
                                       }
                                       return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          SizedBox(
-                                            height: 38.h,
-                                            child: ListView.builder(
-                                              itemCount: event
-                                                  .questions![data['liveq']]
-                                                  .answers!
-                                                  .length,
-                                              itemBuilder: (context, index) {
-                                                int ans = index + 1;
-
-                                                return SizedBox(
-                                                  height: 8.h,
-                                                  child: ListTile(
-                                                    title: InkWell(
-                                                      onTap: () async {
-                                                        try {
-                                                          _numberStreamController
-                                                              .add(index);
-                                                        } catch (e) {}
-                                                      },
-                                                      child: RepText(
-                                                        text:
-                                                            'Answer $ans ${event.questions![data['liveq']].answers![index].answer}',
-                                                        size: 40,
-                                                        isCenter: false,
-                                                        color: snapshot.data ==
-                                                                index
-                                                            ? Colors.green
-                                                            : Colors.white,
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 40.w,
+                                                height: 38.h,
+                                                child: ListView.builder(
+                                                  itemCount: event
+                                                      .questions![data['liveq']]
+                                                      .answers!
+                                                      .length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    int ans = index + 1;
+                                                    return SizedBox(
+                                                      height: 8.h,
+                                                      child: ListTile(
+                                                        title: RepText(
+                                                          text:
+                                                              'Answer $ans ${event.questions![(data['liveq'])].answers![index].answer}',
+                                                          size: 20,
+                                                          isCenter: false,
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              StreamBuilder(
+                                                  stream: FirestoreDatabase()
+                                                      .checkEventAnswerStream(
+                                                          event.id,
+                                                          data['liveq']),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.hasError) {
+                                                      return Text(
+                                                          'Something went wrong');
+                                                    }
+                                                    if (snapshot.hasData) {
+                                                      final data =
+                                                          (snapshot.data
+                                                              as List<Answer>);
+
+                                                      return SizedBox(
+                                                        height: 30.h,
+                                                        width: 40.w,
+                                                        child: CustimBarChart(
+                                                          event: data,
+                                                        ),
+                                                      );
+                                                    }
+                                                    return CircularProgressIndicator(
+                                                      color: CustomeColor()
+                                                          .primaryColor,
+                                                    );
+                                                  }),
+                                            ],
                                           ),
-                                          CustomButton(
-                                            onPressed: () async {
-                                              print(_currentNumber + 1);
-                                              await FirestoreDatabase()
-                                                  .updateEvent(
-                                                      event.id,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              CustomButton(
+                                                size: 30.w,
+                                                onPressed: () async {
+                                                  print(
+                                                      "$questions ${event.questions![data['liveq']].answers!.length}");
+                                                  if (questions >
                                                       event
                                                           .questions![
                                                               data['liveq']]
-                                                          .id,
-                                                      _currentNumber + 1);
-                                              _numberStreamController.add(5);
-                                            },
-                                            text: 'Go',
+                                                          .answers!
+                                                          .length) {
+                                                    _currentQ--;
+
+                                                    await FirestoreDatabase()
+                                                        .updateLiveQuiz(
+                                                            event.id, -1);
+                                                  }
+                                                },
+                                                text: '<',
+                                              ),
+                                              CustomButton(
+                                                size: 30.w,
+                                                onPressed: () async {
+                                                  print(
+                                                      "$questions ${event.questions![data['liveq']].answers!.length}");
+
+                                                  if (questions <
+                                                      event
+                                                          .questions![
+                                                              data['liveq']]
+                                                          .answers!
+                                                          .length) {
+                                                    _currentQ++;
+
+                                                    await FirestoreDatabase()
+                                                        .updateLiveQuiz(
+                                                            event.id, 1);
+                                                  }
+                                                },
+                                                text: '>',
+                                              ),
+                                            ],
                                           )
                                         ],
                                       );

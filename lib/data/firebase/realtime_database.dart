@@ -81,6 +81,19 @@ class FirestoreDatabase {
     return answers;
   }
 
+  Stream<List<Answer>> checkEventAnswerStream(String eventId, int q) {
+    String path = ApiPath.answerPath(eventId, q);
+
+    return FirebaseFirestore.instance
+        .collection(path)
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return Answer.fromJson(doc.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
+
   Future<List<Question>> checkEventQustion(String eventId) async {
     String path = ApiPath.queAllPath(eventId);
     QuerySnapshot querySnapshot =
@@ -112,6 +125,22 @@ class FirestoreDatabase {
       final docRef =
           FirebaseFirestore.instance.collection(path).doc(anw.toString());
       await docRef.update({'noOfVotes': FieldValue.increment(1)});
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in sending data to firebase");
+        print(e);
+      }
+    }
+  }
+
+  Future<void> updateLiveQuiz(String eventId, int increment) async {
+    try {
+      String path = ApiPath.changeLiveQuizPath(eventId);
+      print(path);
+      final docRef = FirebaseFirestore.instance.collection(path).doc(
+            eventId.toString(),
+          );
+      await docRef.update({'liveq': FieldValue.increment(increment)});
     } catch (e) {
       if (kDebugMode) {
         print("Error in sending data to firebase");

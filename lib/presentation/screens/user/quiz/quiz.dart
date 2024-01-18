@@ -66,11 +66,16 @@ class _QuizPageState extends State<QuizPage> {
 
                           if (snapshot.hasData) {
                             final data = snapshot.data as DocumentSnapshot;
-
+                            print(data.data());
                             final questions = data['liveq'];
-                            if (data['liveq'] == 0) {
+                            if (questions == -1) {
                               return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
+                                  SizedBox(
+                                    height: 27.h,
+                                  ),
                                   CircularProgressIndicator(
                                     color: CustomeColor().primaryColor,
                                   ),
@@ -83,8 +88,8 @@ class _QuizPageState extends State<QuizPage> {
                                   ),
                                 ],
                               );
-                              // Loading indicator while data is fetching.
                             } else {
+                              print(event.questions![questions].question);
                               return Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -142,7 +147,8 @@ class _QuizPageState extends State<QuizPage> {
                                                   .length,
                                               itemBuilder: (context, index) {
                                                 int ans = index + 1;
-
+                                                print(
+                                                    "'Answer $ans ${event.questions![(data['liveq'])].answers![index].answer}'");
                                                 return SizedBox(
                                                   height: 8.h,
                                                   child: ListTile(
@@ -155,7 +161,7 @@ class _QuizPageState extends State<QuizPage> {
                                                       },
                                                       child: RepText(
                                                         text:
-                                                            'Answer $ans ${event.questions![data['liveq']].answers![index].answer}',
+                                                            'Answer $ans ${event.questions![(data['liveq'])].answers![index].answer}',
                                                         size: 40,
                                                         isCenter: false,
                                                         color: snapshot.data ==

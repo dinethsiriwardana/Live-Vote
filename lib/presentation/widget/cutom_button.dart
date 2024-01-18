@@ -3,20 +3,18 @@ import 'package:live_vote/const.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
+  const CustomButton(
+      {super.key, required this.text, required this.onPressed, this.size});
 
   final String text;
   final Function onPressed;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 70,
-      width: 80.w,
+      width: size ?? 60.w,
       child: ElevatedButton(
         onPressed: () {
           onPressed();
